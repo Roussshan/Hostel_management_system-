@@ -16,13 +16,16 @@ Every file here represents a concept I've learned, applied, and tested myself.
 
 | File | Chapter | Description |
 |------|---------|-------------|
-| `CH1_Shema.sql` | Chapter 1 | Database creation & initial table schema design |
+| `CH1_Schema/CH1_Schema.sql` | Chapter 1 | Database creation & initial table schema design |
+| `CH2_DML/CH2_DML.sql` | Chapter 2 | INSERT sample student data + basic SELECT queries |
 
 ---
 
 ## 📖 What's Been Done So Far
 
-### ✅ Chapter 1 — Database Schema (`CH1_Shema.sql`)
+---
+
+### ✅ Chapter 1 — Database Schema (`CH1_Schema/CH1_Schema.sql`)
 
 This is the foundation of the entire project. It covers:
 
@@ -47,7 +50,7 @@ CREATE TABLE students (
 );
 ```
 
-**Concepts practised:**
+**Concepts Practised:**
 - `CREATE DATABASE` and `USE` statements
 - `CREATE TABLE` with proper column definitions
 - `PRIMARY KEY` and `AUTO_INCREMENT` for unique student IDs
@@ -55,6 +58,34 @@ CREATE TABLE students (
 - `INT` for numeric fields
 - `ENUM` for restricted-value fields (Gender, Fee Status)
 - `NOT NULL` constraints to enforce data integrity
+
+---
+
+### ✅ Chapter 2 — Data Manipulation Language (`CH2_DML/CH2_DML.sql`)
+
+Inserted 10 real student records into the `students` table and ran practice queries on the data.
+
+**Sample Data Inserted:**
+
+| student_id | Name | Age | Gender | Room_number | Fee_status |
+|------------|------|-----|--------|-------------|------------|
+| 1 | Aarav Sharma | 19 | Male | 101 | Paid |
+| 2 | Priya Mehta | 20 | Female | 102 | Due |
+| 3 | Rohit Verma | 21 | Male | 101 | Paid |
+| 4 | Sneha Iyer | 18 | Female | 103 | Paid |
+| 5 | Karan Patel | 22 | Male | 104 | Due |
+| 6 | Anjali Singh | 19 | Female | 102 | Paid |
+| 7 | Vikram Nair | 20 | Male | 105 | Due |
+| 8 | Pooja Reddy | 21 | Female | 103 | Paid |
+| 9 | Arjun Gupta | 18 | Male | 104 | Paid |
+| 10 | Ritika Joshi | 22 | Female | 105 | Due |
+
+**Concepts Practised:**
+- `INSERT INTO` with multiple rows in a single statement
+- `SELECT *` to verify all inserted data
+- `WHERE` clause to filter by Fee_status, Gender, Room_number
+- `ORDER BY` to sort students by Age ascending
+- `GROUP BY` with `COUNT()` to summarize Paid vs Due fee counts
 
 ---
 
@@ -77,13 +108,14 @@ CREATE TABLE students (
 
 1. Make sure you have **MySQL** (or any compatible SQL client like MySQL Workbench, DBeaver, or phpMyAdmin) installed.
 2. Open the `.sql` file in your SQL client.
-3. Run the script to create the database and table.
+3. Run CH1 first to create the database and table, then CH2 to insert data.
 
 ```bash
-mysql -u root -p < CH1_Shema.sql
+mysql -u root -p < CH1_Schema/CH1_Schema.sql
+mysql -u root -p < CH2_DML/CH2_DML.sql
 ```
 
-Or paste the contents directly into your SQL editor and execute.
+Or paste the contents directly into your SQL editor and execute in order.
 
 ---
 
@@ -91,8 +123,10 @@ Or paste the contents directly into your SQL editor and execute.
 
 - [x] Create and manage databases
 - [x] Design tables with appropriate data types and constraints
-- [ ] Insert, update, and delete records (DML)
-- [ ] Query data using `SELECT`, `WHERE`, `ORDER BY`, `GROUP BY`
+- [x] Insert records using DML (`INSERT INTO`)
+- [x] Query data using `SELECT` and `WHERE`
+- [ ] Use `UPDATE` and `DELETE` statements
+- [ ] Use `ORDER BY`, `GROUP BY`, `HAVING`
 - [ ] Use `JOIN` to relate multiple tables
 - [ ] Create `VIEWS` for common queries
 - [ ] Write `STORED PROCEDURES` and `TRIGGERS`
@@ -105,13 +139,12 @@ Or paste the contents directly into your SQL editor and execute.
 
 As I progress through my SQL course, I plan to add:
 
-- `rooms` table — room capacity, type, floor details
-- `fees` table — payment history, due dates, amounts
-- `wardens` table — staff managing the hostel
-- `complaints` table — issue tracking per student
-- DML scripts — INSERT sample data into all tables
-- Query scripts — practice queries covering all major SQL clauses
-- Views and stored procedures
+- `CH3_Queries/` — Advanced SELECT, UPDATE, DELETE, ORDER BY, GROUP BY, HAVING
+- `CH4_Joins/` — Add `rooms` table and practice JOIN queries
+- `CH5_Functions/` — Aggregate functions, string functions, date functions
+- `CH6_Views/` — Create views for common hostel reports
+- `CH7_Procedures/` — Stored procedures and triggers
+- New tables: `rooms`, `fees`, `wardens`, `complaints`
 
 ---
 
@@ -119,7 +152,7 @@ As I progress through my SQL course, I plan to add:
 
 - **Database:** MySQL
 - **Language:** SQL
-- **Tools:** MySQL Workbench / any SQL client
+- **Tools:** MySQL Workbench
 
 ---
 
