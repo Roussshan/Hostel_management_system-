@@ -25,4 +25,7 @@ use hostel_management;
     DELETE from students -- delete multiple rows.
     where gender = 'other';
     
+-- use 'TRUNCATE' which helps in delete all rows but keep the table structure.
+    DELETE from students; -- this will delete all rows but keeps the table structure.
+    
     select * from students;  
