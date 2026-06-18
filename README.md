@@ -125,7 +125,7 @@ Or paste the contents directly into your SQL editor and execute in order.
 - [x] Design tables with appropriate data types and constraints
 - [x] Insert records using DML (`INSERT INTO`)
 - [x] Query data using `SELECT` and `WHERE`
-- [ ] Use `UPDATE` and `DELETE` statements
+- [x] Use `UPDATE` and `DELETE` statements
 - [ ] Use `ORDER BY`, `GROUP BY`, `HAVING`
 - [ ] Use `JOIN` to relate multiple tables
 - [ ] Create `VIEWS` for common queries
