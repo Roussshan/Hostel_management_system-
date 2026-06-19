@@ -15,6 +15,19 @@ use hostel_management;
      select * from students where gender in ('male','other');
      select * from students where gender in ('female','other');
 	 select * from students where gender in ('male','female');
+     
+-- LIKE (Pattern Matching)
+     select * from students where name like 'A%'; -- Starts with 'A'.
+     select * from students where name like 'R%'; -- starts with 'R'.
+     select * from students where name like 'S%'; -- starts with 'S'.
+     
+     select * from students where name like '%A'; -- Ends with 'A'.
+     select * from students where name like '%S'; -- Ends with 'S'.
+	 select * from students where name like '%R'; -- Ends with 'R'.
+     
+     select * from students where name like '%li%'; -- contains 'li'.
+     select * from students where name like '%ai%'; -- contains 'ai'.
+     select * from students where name like '%na%'; -- contains 'na'.
 
      select * from students;
 
