@@ -1,8 +1,8 @@
 use hostel_management;
 
--- ------------------------------------------------------------------
--- Run BETWEEN, IN, LIKE, IS NULL on your existing students table. 
--- ------------------------------------------------------------------
+-- ------------------------------------------------------------------------------
+-- Run BETWEEN, IN, LIKE, IS NULL / IS NOT NULL on your existing students table. 
+-- ------------------------------------------------------------------------------
 
 -- BETWEEN 
      select * from students where age between '19' and '21';
@@ -28,6 +28,17 @@ use hostel_management;
      select * from students where name like '%li%'; -- contains 'li'.
      select * from students where name like '%ai%'; -- contains 'ai'.
      select * from students where name like '%na%'; -- contains 'na'.
+     
+-- IS NULL / IS NOT NULL
+     select * from students where name is null;
+     select * from students where age is null;
+     select * from students where room_number is null;
+     
+     select * from students where name is not null;
+     select * from students where age is not null;
+     select * from students where room_number is not null;
+     
+     
 
      select * from students;
 
