@@ -148,8 +148,8 @@ Or paste the contents directly into your SQL editor and execute top to bottom.
 - [x] Sort and limit results with `ORDER BY` and `LIMIT`/`OFFSET`
 - [x] Use `UPDATE` and `DELETE` statements
 - [x] Advanced filtering: `BETWEEN`, `IN`, `LIKE`, `IS NULL`
-- [ ] `DISTINCT` keyword
-- [ ] Alter existing tables: add/drop/rename/move columns, `RENAME TABLE`, `TRUNCATE`
+- [x] `DISTINCT` keyword
+- [x] Alter existing tables: add/drop/rename/move columns, `RENAME TABLE`, `TRUNCATE`
 - [ ] Add constraints after table creation: `UNIQUE`, `CHECK`, `DEFAULT`, `PRIMARY KEY`
 - [ ] Aggregate, string, date, and math functions; `IF()`
 - [ ] Transactions: `autocommit`, `COMMIT`, `ROLLBACK`
