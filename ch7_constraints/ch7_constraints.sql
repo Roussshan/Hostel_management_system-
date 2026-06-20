@@ -20,5 +20,11 @@ describe students;
    INSERT INTO students (Name, Age, Gender, Room_number, Fee_status, email)
    VALUES ('Young Test', 10, 'Male', 101, 'Due', 'young@example.com');
    -- should fail the CHECK
+   
+   ALTER TABLE students
+   MODIFY COLUMN Age INT NOT NULL;
+   INSERT INTO students (Name, Gender, Room_number, Fee_status, email)
+   VALUES ('No Age Test', 'Male', 103, 'Due', 'noage@example.com');
+   -- should fail since Age is missing and now NOT NULL
 
 select * from students;
