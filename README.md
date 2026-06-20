@@ -6,7 +6,7 @@
 
 ## 📌 About This Project
 
-This repository is my personal SQL learning ground. The goal is to design and build a **Hostel Management System** database from scratch — starting with schema design, then progressively adding data manipulation, queries, views, and more as I advance through my SQL course.
+This repository is my personal SQL learning ground. The goal is to design and build a **Hostel Management System** database from scratch — starting with schema design, then progressively adding data manipulation, queries, constraints, functions, joins, views, and more as I advance through my SQL course.
 
 Every file here represents a concept I've learned, applied, and tested myself.
 
@@ -16,30 +16,24 @@ Every file here represents a concept I've learned, applied, and tested myself.
 
 | File | Chapter | Description |
 |------|---------|-------------|
-| `CH1_Schema/CH1_Schema.sql` | Chapter 1 | Database creation & initial table schema design |
-| `CH2_DML/CH2_DML.sql` | Chapter 2 | INSERT sample student data + basic SELECT queries |
+| `ch1_schema/CH1_Shema.sql` | Chapter 1 | Database creation & initial table schema design |
+| `ch2_adding_data/ch2_Adding_Data.sql` | Chapter 2 | INSERT sample student data |
+| `ch3_querying_data/ch3_querying_data.sql` | Chapter 3 | SELECT, WHERE filters, ORDER BY, LIMIT/OFFSET, basic UPDATE |
+| `ch4_modifying_data/ch4_modifying_data.sql` | Chapter 4 | UPDATE (multi-column) and DELETE operations |
+| `ch5_advanced_filtering/ch5_advanced_filtering.sql` | Chapter 5 | BETWEEN, IN, LIKE, IS NULL / IS NOT NULL |
 
 ---
 
 ## 📖 What's Been Done So Far
 
----
+### ✅ Chapter 1 — Schema (`ch1_schema/CH1_Shema.sql`)
 
-### ✅ Chapter 1 — Database Schema (`CH1_Schema/CH1_Schema.sql`)
+Creates the database and the foundational `students` table.
 
-This is the foundation of the entire project. It covers:
-
-**1. Creating the Database**
 ```sql
 CREATE DATABASE hostel_management;
 USE hostel_management;
-```
 
-**2. Designing the `students` Table**
-
-The first core entity of the system — storing key information about each hostel resident.
-
-```sql
 CREATE TABLE students (
     student_id  INT PRIMARY KEY AUTO_INCREMENT,
     Name        VARCHAR(100) NOT NULL,
@@ -50,25 +44,16 @@ CREATE TABLE students (
 );
 ```
 
-**Concepts Practised:**
-- `CREATE DATABASE` and `USE` statements
-- `CREATE TABLE` with proper column definitions
-- `PRIMARY KEY` and `AUTO_INCREMENT` for unique student IDs
-- `VARCHAR` for text fields with length constraints
-- `INT` for numeric fields
-- `ENUM` for restricted-value fields (Gender, Fee Status)
-- `NOT NULL` constraints to enforce data integrity
+**Concepts practised:** `CREATE DATABASE`, `USE`, `CREATE TABLE`, `PRIMARY KEY`, `AUTO_INCREMENT`, `VARCHAR`, `INT`, `ENUM`, `NOT NULL`.
 
 ---
 
-### ✅ Chapter 2 — Data Manipulation Language (`CH2_DML/CH2_DML.sql`)
+### ✅ Chapter 2 — Adding Data (`ch2_adding_data/ch2_Adding_Data.sql`)
 
-Inserted 10 real student records into the `students` table and ran practice queries on the data.
-
-**Sample Data Inserted:**
+Inserted 10 student records using a single multi-row `INSERT` with explicit column names.
 
 | student_id | Name | Age | Gender | Room_number | Fee_status |
-|------------|------|-----|--------|-------------|------------|
+|---|---|---|---|---|---|
 | 1 | Aarav Sharma | 19 | Male | 101 | Paid |
 | 2 | Priya Mehta | 20 | Female | 102 | Due |
 | 3 | Rohit Verma | 21 | Male | 101 | Paid |
@@ -80,12 +65,44 @@ Inserted 10 real student records into the `students` table and ran practice quer
 | 9 | Arjun Gupta | 18 | Male | 104 | Paid |
 | 10 | Ritika Joshi | 22 | Female | 105 | Due |
 
-**Concepts Practised:**
-- `INSERT INTO` with multiple rows in a single statement
-- `SELECT *` to verify all inserted data
-- `WHERE` clause to filter by Fee_status, Gender, Room_number
-- `ORDER BY` to sort students by Age ascending
-- `GROUP BY` with `COUNT()` to summarize Paid vs Due fee counts
+**Concepts practised:** `INSERT INTO` (multi-row, column-name form), `SELECT *` to verify inserted data.
+
+---
+
+### ✅ Chapter 3 — Querying Data (`ch3_querying_data/ch3_querying_data.sql`)
+
+Practised filtering, sorting, and limiting result sets.
+
+**Concepts practised:**
+- `WHERE` with `=`, `!=`, `<`, `>`, `<=`, `>=`
+- Combining conditions with `AND` / `OR`
+- `ORDER BY` (`ASC` / `DESC`)
+- `LIMIT`, `LIMIT ... OFFSET ...`, and the shorthand `LIMIT offset, count`
+- Introductory `UPDATE` statements (single column)
+
+---
+
+### ✅ Chapter 4 — Modifying Data (`ch4_modifying_data/ch4_modifying_data.sql`)
+
+Practised changing and removing existing rows.
+
+**Concepts practised:**
+- `INSERT` with explicit primary key values
+- `UPDATE` with multiple columns in one statement
+- `DELETE` for a single row, multiple rows (by condition), and all rows
+- Difference between deleting all rows (`DELETE FROM students;`) and removing the table itself
+
+---
+
+### ✅ Chapter 5 — Advanced Filtering (`ch5_advanced_filtering/ch5_advanced_filtering.sql`)
+
+Practised more expressive ways to filter rows beyond basic comparison operators.
+
+**Concepts practised:**
+- `BETWEEN ... AND ...` on numeric ranges (`age`, `room_number`)
+- `IN (...)` to match against a list of values (`gender`)
+- `LIKE` pattern matching with `%` wildcard — starts with, ends with, and contains
+- `IS NULL` / `IS NOT NULL` checks across multiple columns
 
 ---
 
@@ -107,15 +124,18 @@ Inserted 10 real student records into the `students` table and ran practice quer
 ## 🚀 How to Run
 
 1. Make sure you have **MySQL** (or any compatible SQL client like MySQL Workbench, DBeaver, or phpMyAdmin) installed.
-2. Open the `.sql` file in your SQL client.
-3. Run CH1 first to create the database and table, then CH2 to insert data.
+2. Open each `.sql` file in your SQL client.
+3. Run the chapters **in order** — each one builds on data created by the previous one.
 
 ```bash
-mysql -u root -p < CH1_Schema/CH1_Schema.sql
-mysql -u root -p < CH2_DML/CH2_DML.sql
+mysql -u harry -p < ch1_schema/CH1_Shema.sql
+mysql -u harry -p < ch2_adding_data/ch2_Adding_Data.sql
+mysql -u harry -p < ch3_querying_data/ch3_querying_data.sql
+mysql -u harry -p < ch4_modifying_data/ch4_modifying_data.sql
+mysql -u harry -p < ch5_advanced_filtering/ch5_advanced_filtering.sql
 ```
 
-Or paste the contents directly into your SQL editor and execute in order.
+Or paste the contents directly into your SQL editor and execute top to bottom.
 
 ---
 
@@ -125,26 +145,44 @@ Or paste the contents directly into your SQL editor and execute in order.
 - [x] Design tables with appropriate data types and constraints
 - [x] Insert records using DML (`INSERT INTO`)
 - [x] Query data using `SELECT` and `WHERE`
+- [x] Sort and limit results with `ORDER BY` and `LIMIT`/`OFFSET`
 - [x] Use `UPDATE` and `DELETE` statements
-- [ ] Use `ORDER BY`, `GROUP BY`, `HAVING`
-- [ ] Use `JOIN` to relate multiple tables
-- [ ] Create `VIEWS` for common queries
+- [x] Advanced filtering: `BETWEEN`, `IN`, `LIKE`, `IS NULL`
+- [ ] `DISTINCT` keyword
+- [ ] Alter existing tables: add/drop/rename/move columns, `RENAME TABLE`, `TRUNCATE`
+- [ ] Add constraints after table creation: `UNIQUE`, `CHECK`, `DEFAULT`, `PRIMARY KEY`
+- [ ] Aggregate, string, date, and math functions; `IF()`
+- [ ] Transactions: `autocommit`, `COMMIT`, `ROLLBACK`
+- [ ] Foreign keys and relational tables (`rooms`, `payments`)
+- [ ] `JOIN` (INNER / LEFT / RIGHT) to relate multiple tables
+- [ ] Self JOIN (student referrals)
+- [ ] `UNION` / `UNION ALL`
+- [ ] Create `VIEWS` for common reports
+- [ ] Indexing for performance
+- [ ] Subqueries
+- [ ] `GROUP BY`, `HAVING`, `WITH ROLLUP`
 - [ ] Write `STORED PROCEDURES` and `TRIGGERS`
-- [ ] Implement indexing for performance
-- [ ] Design relationships (rooms, wardens, fees, complaints)
 
 ---
 
 ## 🔭 Planned Additions
 
-As I progress through my SQL course, I plan to add:
+Following my SQL course chapter by chapter, in this order:
 
-- `CH3_Queries/` — Advanced SELECT, UPDATE, DELETE, ORDER BY, GROUP BY, HAVING
-- `CH4_Joins/` — Add `rooms` table and practice JOIN queries
-- `CH5_Functions/` — Aggregate functions, string functions, date functions
-- `CH6_Views/` — Create views for common hostel reports
-- `CH7_Procedures/` — Stored procedures and triggers
-- New tables: `rooms`, `fees`, `wardens`, `complaints`
+- `ch6_altering_tables/` — `ALTER TABLE` (add/drop/modify/rename/move columns), `RENAME TABLE`, `DROP TABLE`, `TRUNCATE TABLE`, `DISTINCT`
+- `ch7_constraints/` — `UNIQUE`, `CHECK`, `DEFAULT`, adding `NOT NULL` and `PRIMARY KEY` after creation
+- `ch8_functions/` — Aggregate, string, date, and math functions, `IF()`
+- `ch9_transactions/` — `autocommit`, `COMMIT`, `ROLLBACK`
+- `ch10_foreign_keys/` — New `rooms` and `payments` tables linked via `FOREIGN KEY`, `ON DELETE` behaviors
+- `ch11_joins/` — INNER, LEFT, RIGHT JOIN across `students`, `rooms`, `payments`
+- `ch12_self_join/` — `referred_by_id` column + self join for referrer names
+- `ch13_union/` — `alumni_students` table combined with `students` via `UNION`/`UNION ALL`
+- `ch14_views/` — Views such as `due_fee_students`
+- `ch15_indexes/` — Single and multi-column indexes
+- `ch16_subqueries/` — Scalar subqueries, subqueries with `IN`
+- `ch17_group_by_having/` — `GROUP BY`, `HAVING`, `WITH ROLLUP`
+- `ch18_stored_procedures/` — `AddStudent()` procedure with `IN` parameters
+- `ch19_triggers/` — `student_log` table + `AFTER INSERT` trigger
 
 ---
 
