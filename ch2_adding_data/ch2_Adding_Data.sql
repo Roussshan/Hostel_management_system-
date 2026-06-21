@@ -22,7 +22,6 @@ VALUES
     ('sneha Bansal',  23, 'female', 121, 'paid'),
     ('pooja singh',   20, 'female', 001, 'due');
 
-
 -- Verify all data was inserted correctly
 SELECT * FROM students;
 
