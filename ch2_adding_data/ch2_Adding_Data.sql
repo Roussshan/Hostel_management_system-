@@ -17,7 +17,10 @@ VALUES
     ('Vikram Nair',   20, 'Male',   105, 'Due'),
     ('Pooja Reddy',   21, 'Female', 103, 'Paid'),
     ('Arjun Gupta',   18, 'Male',   104, 'Paid'),
-    ('Ritika Joshi',  22, 'Female', 105, 'Due');
+    ('Ritika Joshi',  22, 'Female', 105, 'Due'),
+    ('kunal Kumar',   21, 'male',   119, 'paid'),
+    ('sneha Bansal',  23, 'female', 121, 'paid'),
+    ('pooja singh',   20, 'female', 001, 'due');
 
 
 -- Verify all data was inserted correctly
