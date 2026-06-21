@@ -14,6 +14,9 @@ use hostel_management;
    
 -- Using MIN() and MAX()
    SELECT MIN(age) AS min_Age, MAX(age) AS max_salary FROM students; -- helps to get the minimum and maximum age.
-   
+
+-- Using AVG()
+   SELECT AVG(age) FROM students; -- helps to find average of all the students age.
+
    
 select * from students;
