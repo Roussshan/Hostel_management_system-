@@ -12,4 +12,8 @@ use hostel_management;
    SELECT COUNT(*) from students where gender = 'female'; -- helps to count the total numbers of female.
    SELECT COUNT(*) from students where gender = 'male'; -- helps to count the total numbers of male.
    
+-- Using MIN() and MAX()
+   SELECT MIN(age) AS min_Age, MAX(age) AS max_salary FROM students; -- helps to get the minimum and maximum age.
+   
+   
 select * from students;
