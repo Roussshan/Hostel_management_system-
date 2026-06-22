@@ -23,6 +23,7 @@ use hostel_management;
    UPDATE students set date_of_birth ='2003-08-25', email= 'snneha@gmail.com' where student_id=12;
    UPDATE students set date_of_birth ='2004-07-12', email= 'poo@gmail.com' where student_id=13;
    
+   update students set room_number = 111 where student_id=13;
    
    select * from students;
    
