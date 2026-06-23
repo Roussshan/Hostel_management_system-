@@ -47,4 +47,19 @@ INSERT INTO fees (student_id, amount_due, due_date, status) VALUES
 (12, 8000, '2026-06-01', 'Paid'),
 (13, 8000, '2026-06-01', 'Due');
 
-select * from fees;
+select * from fees; -- shows fees table 
+
+--  Insert matching payments for "Paid" students only.
+
+SELECT fee_id, student_id, status FROM fees WHERE status = 'Paid';
+INSERT INTO payments (fee_id, amount, payment_date, payment_method) VALUES
+(1, 8000, '2026-06-05', 'UPI'),
+(3, 8000, '2026-06-05', 'Cash'),
+(4, 8000, '2026-06-06', 'Card'),
+(6, 8000, '2026-06-06', 'UPI'),
+(8, 8000, '2026-06-07', 'Cash'),
+(9, 8000, '2026-06-07', 'UPI'),
+(11, 8000, '2026-06-08', 'Card'),
+(12, 8000, '2026-06-08', 'UPI');
+
+select * from payments; -- shows paymments table 
