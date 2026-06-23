@@ -13,3 +13,20 @@ CREATE TABLE fees (
     status ENUM('Paid','Due','Partial') NOT NULL DEFAULT 'Due',
     FOREIGN KEY (student_id) REFERENCES students(student_id)
 );
+
+DESCRIBE fees;
+
+-- ------------------------- --
+-- Create New Payemnts table --
+-- ------------------------- --
+
+CREATE TABLE payments (
+    payment_id INT PRIMARY KEY AUTO_INCREMENT,
+    fee_id INT NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    payment_date DATE NOT NULL,
+    payment_method ENUM('Cash','UPI','Card') NOT NULL,
+    FOREIGN KEY (fee_id) REFERENCES fees(fee_id)
+);
+
+DESCRIBE payments;
