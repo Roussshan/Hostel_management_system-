@@ -74,3 +74,17 @@ LEFT JOIN payments p ON f.fee_id = p.fee_id;
 ALTER TABLE students DROP COLUMN Fee_status;
 
 DESCRIBE students;
+
+
+-- Trying some real practice queries.
+-- Total amount due across all students
+SELECT SUM(amount_due) AS total_due FROM fees;
+
+-- Total amount actually collected
+SELECT SUM(amount) AS total_collected FROM payments;
+
+-- Students who still owe money
+SELECT s.Name, f.amount_due, f.status
+FROM students s
+JOIN fees f ON s.student_id = f.student_id
+WHERE f.status = 'Due';
