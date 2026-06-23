@@ -63,3 +63,9 @@ INSERT INTO payments (fee_id, amount, payment_date, payment_method) VALUES
 (12, 8000, '2026-06-08', 'UPI');
 
 select * from payments; -- shows paymments table 
+
+-- Verifing all joints Works properly.
+SELECT s.Name, f.amount_due, f.status, p.amount AS amount_paid
+FROM students s
+JOIN fees f ON s.student_id = f.student_id
+LEFT JOIN payments p ON f.fee_id = p.fee_id;
