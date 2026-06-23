@@ -69,3 +69,8 @@ SELECT s.Name, f.amount_due, f.status, p.amount AS amount_paid
 FROM students s
 JOIN fees f ON s.student_id = f.student_id
 LEFT JOIN payments p ON f.fee_id = p.fee_id;
+
+-- Drop the now-redundant column
+ALTER TABLE students DROP COLUMN Fee_status;
+
+DESCRIBE students;
