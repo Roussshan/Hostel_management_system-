@@ -39,3 +39,15 @@ SELECT DISTINCT Room_number FROM students; -- shows you the unique room numbers 
    UPDATE students SET room_id = 8 WHERE Room_number = 111;
    
    SELECT student_id, Name, Room_number, room_id FROM students; -- shows both the old Room_number and the new room_id side by side, matching correctly.
+
+-- Make the connection official (foregin key)   
+   ALTER TABLE students
+   ADD CONSTRAINT fk_room FOREIGN KEY (room_id) REFERENCES rooms(room_id);
+   
+-- Removing old duplicate column 
+   ALTER TABLE students DROP COLUMN Room_number;
+   
+-- Trying first real joint 
+   SELECT students.Name, rooms.room_number
+   FROM students
+   JOIN rooms ON students.room_id = rooms.room_id;
