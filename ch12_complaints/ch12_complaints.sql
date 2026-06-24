@@ -44,3 +44,22 @@ SELECT s.Name, r.room_number, c.description, c.status
 FROM complaints c
 JOIN students s ON c.student_id = s.student_id
 JOIN rooms r ON c.room_id = r.room_id;
+
+
+-- Practice queries
+-- Rooms with more than 1 complaint
+SELECT room_id, COUNT(*) AS complaint_count
+FROM complaints
+GROUP BY room_id
+HAVING COUNT(*) > 1;
+
+-- Average resolution time for resolved complaints
+SELECT AVG(TIMESTAMPDIFF(HOUR, created_at, resolved_at)) AS avg_resolution_hours
+FROM complaints
+WHERE status = 'Resolved';
+
+-- All open complaints with student contact info
+SELECT s.Name, s.email, c.description
+FROM complaints c
+JOIN students s ON c.student_id = s.student_id
+WHERE c.status = 'Open';
