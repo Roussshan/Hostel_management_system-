@@ -5,3 +5,9 @@ ALTER TABLE students ADD COLUMN referred_by_id INT;
 ALTER TABLE students ADD CONSTRAINT fk_referrer FOREIGN KEY (referred_by_id) REFERENCES students(student_id);
 
 DESCRIBE students;
+
+-- creating referral relationships between students. 
+UPDATE students SET referred_by_id = 1 WHERE student_id IN (2, 3);   -- Aarav referred Priya and Rohit
+UPDATE students SET referred_by_id = 2 WHERE student_id = 4;          -- Priya referred Sneha
+UPDATE students SET referred_by_id = 6 WHERE student_id IN (11, 12);  -- Anjali referred Kunal and Sneha Bansal
+-- Leave the rest as NULL (not referred by anyone)
