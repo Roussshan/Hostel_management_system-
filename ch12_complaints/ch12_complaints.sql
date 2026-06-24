@@ -36,3 +36,11 @@ INSERT INTO complaints (student_id, room_id, description, status) VALUES
 UPDATE complaints SET resolved_at = '2026-06-10 14:00:00' WHERE complaint_id = 2;
 UPDATE complaints SET resolved_at = '2026-06-11 10:30:00' WHERE complaint_id = 4;
 UPDATE complaints SET resolved_at = '2026-06-09 16:45:00' WHERE complaint_id = 6;
+
+select * from complaints; -- verifying
+
+-- Trying a 3-table JOIN
+SELECT s.Name, r.room_number, c.description, c.status
+FROM complaints c
+JOIN students s ON c.student_id = s.student_id
+JOIN rooms r ON c.room_id = r.room_id;
