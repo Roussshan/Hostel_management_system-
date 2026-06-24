@@ -20,4 +20,14 @@ SELECT
     a.Name AS student_name,
     b.Name AS referred_by
 FROM students a
-LEFT JOIN students b ON a.referred_by_id = b.student_id;
+LEFT JOIN students b ON a.referred_by_id = b.student_id; -- LEFT JOIN is important here — it keeps students with NULL referrals visible too, instead of dropping them.
+
+
+-- Count how many students each person referred
+SELECT b.Name AS referrer, COUNT(*) AS total_referred
+FROM students a
+JOIN students b ON a.referred_by_id = b.student_id
+GROUP BY b.Name;
+
+-- Students who were NOT referred by anyone
+SELECT Name FROM students WHERE referred_by_id IS NULL;
