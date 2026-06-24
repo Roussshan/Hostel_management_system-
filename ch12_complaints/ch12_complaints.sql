@@ -31,3 +31,8 @@ INSERT INTO complaints (student_id, room_id, description, status) VALUES
 (3, 1, 'Door lock jammed', 'Resolved'),
 (6, 2, 'No hot water', 'Open'),
 (13, 5, 'Pest control needed', 'Open');
+
+-- Setting Resolved_at for resolved one.
+UPDATE complaints SET resolved_at = '2026-06-10 14:00:00' WHERE complaint_id = 2;
+UPDATE complaints SET resolved_at = '2026-06-11 10:30:00' WHERE complaint_id = 4;
+UPDATE complaints SET resolved_at = '2026-06-09 16:45:00' WHERE complaint_id = 6;
