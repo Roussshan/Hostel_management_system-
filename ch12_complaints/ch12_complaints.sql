@@ -17,3 +17,17 @@ CREATE TABLE complaints (
 );
 
 describe complaints;
+
+-- checking room_ids.
+SELECT student_id, Name, room_id FROM students ORDER BY student_id;
+
+-- Inserting samples complaints 
+INSERT INTO complaints (student_id, room_id, description, status) VALUES
+(2, 2, 'Leaking tap in bathroom', 'Open'),
+(5, 4, 'Fan not working', 'Resolved'),
+(7, 5, 'Wifi not reaching room', 'Open'),
+(9, 4, 'Broken window latch', 'Resolved'),
+(10, 5, 'Noisy neighbors at night', 'Open'),
+(3, 1, 'Door lock jammed', 'Resolved'),
+(6, 2, 'No hot water', 'Open'),
+(13, 5, 'Pest control needed', 'Open');
