@@ -16,3 +16,9 @@ SELECT s.Name, r.room_number, f.status AS fee_status
 FROM students s
 INNER JOIN rooms r ON s.room_id = r.room_id
 INNER JOIN fees f ON s.student_id = f.student_id;
+
+-- LEFT JOINS to find students with no complaints 
+SELECT s.Name, c.description
+FROM students s
+LEFT JOIN complaints c ON s.student_id = c.student_id
+WHERE c.complaint_id IS NULL;
