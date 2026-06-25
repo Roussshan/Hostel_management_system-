@@ -22,7 +22,7 @@ SELECT
 FROM students a
 LEFT JOIN students b ON a.referred_by_id = b.student_id; -- LEFT JOIN is important here — it keeps students with NULL referrals visible too, instead of dropping them.
 
-
+-- Practicing some Querys
 -- Count how many students each person referred
 SELECT b.Name AS referrer, COUNT(*) AS total_referred
 FROM students a
