@@ -22,3 +22,15 @@ SELECT s.Name, c.description
 FROM students s
 LEFT JOIN complaints c ON s.student_id = c.student_id
 WHERE c.complaint_id IS NULL;
+
+-- Combining all the tables for final report
+SELECT 
+    s.Name,
+    r.room_number,
+    f.status AS fee_status,
+    COUNT(c.complaint_id) AS open_complaints
+FROM students s
+JOIN rooms r ON s.room_id = r.room_id
+JOIN fees f ON s.student_id = f.student_id
+LEFT JOIN complaints c ON s.student_id = c.student_id AND c.status = 'Open'
+GROUP BY s.student_id, s.Name, r.room_number, f.status;
