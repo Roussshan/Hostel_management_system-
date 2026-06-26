@@ -6,7 +6,7 @@
 
 ## 📌 About This Project
 
-This repository is my personal SQL learning ground. The goal is to design and build a **Hostel Management System** database from scratch — starting with a single table, then progressively splitting it into a proper relational design with rooms, fees, and more, as I advance through my SQL course.
+This repository is my personal SQL learning ground. The goal is to design and build a **Hostel Management System** database from scratch — starting with a single table, then progressively splitting it into a proper relational design with rooms, fees, payments, complaints, and referrals, as I advance through my SQL course.
 
 Every file here represents a concept I've learned, applied, and tested myself.
 
@@ -21,11 +21,15 @@ Every file here represents a concept I've learned, applied, and tested myself.
 | `ch3_querying_data/ch3_querying_data.sql` | Chapter 3 | SELECT, WHERE filters, ORDER BY, LIMIT/OFFSET, basic UPDATE |
 | `ch4_modifying_data/ch4_modifying_data.sql` | Chapter 4 | UPDATE (multi-column) and DELETE operations |
 | `ch5_advanced_filtering/ch5_advanced_filtering.sql` | Chapter 5 | BETWEEN, IN, LIKE, IS NULL / IS NOT NULL |
-| `ch6_altering_tables/ch6_altering_table.sql` | Chapter 6 | ALTER TABLE to add new columns (`date_of_birth`, `email`) + backfilling data |
+| `ch6_altering_tables/ch6_altering_table.sql` | Chapter 6 | ALTER TABLE to add `date_of_birth`, `email` + backfilling data |
 | `ch7_constraints/ch7_constraints.sql` | Chapter 7 | UNIQUE, CHECK, NOT NULL constraints |
 | `ch8_functions/ch8_functions.sql` | Chapter 8 | Aggregate functions: COUNT, MIN, MAX, AVG |
 | `ch9_transactions/ch9_transactions.sql` | Chapter 9 | autocommit, COMMIT, ROLLBACK |
-| `ch10_rooms_relation/ch10_room_relation.sql` | Chapter 10 *(in progress)* | Splitting room data into a separate `rooms` table |
+| `ch10_rooms_relation/ch10_room_relation.sql` | Chapter 10 | New `rooms` table, FK link, dropped `Room_number` |
+| `ch11_fees_payments/ch11_fees_payments.sql` | Chapter 11 | New `fees` and `payments` tables, dropped `Fee_status` |
+| `ch12_complaints/ch12_complaints.sql` | Chapter 12 | New `complaints` table linked to students and rooms |
+| `ch13_self_join/ch13_self_join.sql` | Chapter 13 | `referred_by_id` column + self join for referrer names |
+| `ch14_joins/ch14_joins.sql` | Chapter 14 | INNER/LEFT JOIN across students, rooms, fees, complaints |
 
 ---
 
@@ -55,7 +59,7 @@ CREATE TABLE students (
 
 ### ✅ Chapter 2 — Adding Data (`ch2_adding_data/ch2_Adding_Data.sql`)
 
-Inserted 10 student records using a single multi-row `INSERT` with explicit column names. *(Note: students 11–13 were added later, during Chapter 6 — see that section below.)*
+Inserted 10 student records using a single multi-row `INSERT` with explicit column names. *(Note: students 11–13 were added later, during Chapter 6.)*
 
 | student_id | Name | Age | Gender | Fee_status |
 |---|---|---|---|---|
@@ -76,46 +80,27 @@ Inserted 10 student records using a single multi-row `INSERT` with explicit colu
 
 ### ✅ Chapter 3 — Querying Data (`ch3_querying_data/ch3_querying_data.sql`)
 
-Practised filtering, sorting, and limiting result sets.
-
-**Concepts practised:**
-- `WHERE` with `=`, `!=`, `<`, `>`, `<=`, `>=`
-- Combining conditions with `AND` / `OR`
-- `ORDER BY` (`ASC` / `DESC`)
-- `LIMIT`, `LIMIT ... OFFSET ...`, and the shorthand `LIMIT offset, count`
-- Introductory `UPDATE` statements (single column)
+**Concepts practised:** `WHERE` with `=`, `!=`, `<`, `>`, `<=`, `>=`; `AND`/`OR`; `ORDER BY`; `LIMIT`/`OFFSET`; introductory single-column `UPDATE`.
 
 ---
 
 ### ✅ Chapter 4 — Modifying Data (`ch4_modifying_data/ch4_modifying_data.sql`)
 
-Practised changing and removing existing rows.
-
-**Concepts practised:**
-- `INSERT` with explicit primary key values
-- `UPDATE` with multiple columns in one statement
-- `DELETE` for a single row, multiple rows (by condition), and all rows
-- Difference between deleting all rows (`DELETE FROM students;`) and removing the table itself
+**Concepts practised:** `INSERT` with explicit PK values, multi-column `UPDATE`, `DELETE` (single row, multiple rows, all rows), difference between deleting all rows and dropping the table.
 
 ---
 
 ### ✅ Chapter 5 — Advanced Filtering (`ch5_advanced_filtering/ch5_advanced_filtering.sql`)
 
-Practised more expressive ways to filter rows beyond basic comparison operators.
-
-**Concepts practised:**
-- `BETWEEN ... AND ...` on numeric ranges (`age`, `room_number`)
-- `IN (...)` to match against a list of values (`gender`)
-- `LIKE` pattern matching with `%` wildcard — starts with, ends with, and contains
-- `IS NULL` / `IS NOT NULL` checks across multiple columns
+**Concepts practised:** `BETWEEN`, `IN`, `LIKE` (`%` wildcard — starts with, ends with, contains), `IS NULL`/`IS NOT NULL`.
 
 ---
 
 ### ✅ Chapter 6 — Altering Tables (`ch6_altering_tables/ch6_altering_table.sql`)
 
-Extended the `students` table with two new columns and backfilled real data for every existing student — plus 3 new students were added during this chapter, bringing the table to 13 students total.
+Extended `students` with `date_of_birth` and `email`, backfilled data for all students — 3 new students (11, 12, 13) were also added, bringing the table to 13 students total.
 
-**Current full student data (after Chapters 1–9):**
+**Student data after Chapters 1–9 (before the room/fee split in Ch10–11):**
 
 | student_id | Name | Age | Gender | Fee_status | email |
 |---|---|---|---|---|---|
@@ -133,99 +118,126 @@ Extended the `students` table with two new columns and backfilled real data for 
 | 12 | sneha Bansal | 23 | Female | Paid | snneha@gmail.com |
 | 13 | pooja singh | 20 | Female | Due | poo@gmail.com |
 
-> ⚠️ Students 11–13 don't have a matching `INSERT` statement saved in any committed file — they were likely added directly in Workbench. Worth adding a short `INSERT INTO students (...) VALUES (...)` block for them at the top of `ch6_altering_table.sql` so the chapter is fully reproducible from scratch.
+> ⚠️ Students 11–13 don't have a matching `INSERT` saved in any committed file — worth adding one near the top of `ch6_altering_table.sql` for full reproducibility.
 
-**Concepts practised:**
-- `ALTER TABLE ... ADD COLUMN` to add `date_of_birth` (DATE) and `email` (VARCHAR)
-- Backfilling new columns row-by-row with `UPDATE`
-- Updating an existing column (`Room_number`) for a specific student
+**Concepts practised:** `ALTER TABLE ... ADD COLUMN`, backfilling with `UPDATE`.
 
 ---
 
 ### ✅ Chapter 7 — Constraints (`ch7_constraints/ch7_constraints.sql`)
 
-Practised locking down data quality on the `email` and `Age` columns.
-
-**Concepts practised:**
-- `ADD CONSTRAINT ... UNIQUE` on `email`, then verified it rejects duplicate emails
-- `ADD CONSTRAINT ... CHECK (age > 16)`, then verified it rejects underage entries
-- `MODIFY COLUMN ... NOT NULL` on `Age`, then verified it rejects a missing age
+**Concepts practised:** `ADD CONSTRAINT ... UNIQUE` on `email` (verified duplicate rejection), `ADD CONSTRAINT ... CHECK (age > 16)`, `MODIFY COLUMN ... NOT NULL` on `Age`.
 
 ---
 
 ### ✅ Chapter 8 — Functions (`ch8_functions/ch8_functions.sql`)
 
-Practised aggregate functions on the `students` table.
-
-**Concepts practised:**
-- `COUNT(*)` — total students, and filtered counts by gender
-- `MIN()` / `MAX()` — youngest and oldest student age
-- `AVG()` — average student age
+**Concepts practised:** `COUNT(*)`, `MIN()`/`MAX()`, `AVG()` on student age and gender.
 
 ---
 
 ### ✅ Chapter 9 — Transactions (`ch9_transactions/ch9_transactions.sql`)
 
-Practised controlling when changes are actually saved to the database.
-
-**Concepts practised:**
-- Checking the default `autocommit` state
-- `SET autocommit = 0` to take manual control
-- `COMMIT` to save a change permanently
-- `ROLLBACK` to undo a change before it's saved
-- Re-enabling `autocommit = 1`
+**Concepts practised:** checking default `autocommit`, `SET autocommit = 0`, `COMMIT`, `ROLLBACK`, re-enabling `autocommit = 1`.
 
 ---
 
-### 🔧 Chapter 10 — Rooms Relation (`ch10_rooms_relation/ch10_room_relation.sql`) — *in progress*
+### ✅ Chapter 10 — Rooms Relation (`ch10_rooms_relation/ch10_room_relation.sql`)
 
-Started splitting room data out of `students` into its own `rooms` table — the first step toward a proper relational schema.
+Split room data out of `students` into its own `rooms` table — the first real normalization step.
 
-**Done so far:**
-- Created a new `rooms` table (`room_id`, `room_number`, `capacity`)
-- Identified unique room numbers from `students` using `SELECT DISTINCT`
-- Inserted matching rows into `rooms`
-- Added a new `room_id` column to `students`
-- Linked each student to their correct `room_id` via `UPDATE`
-
-**Still to do:**
-- Add a `FOREIGN KEY` constraint linking `students.room_id` → `rooms.room_id`
-- Drop the now-redundant `Room_number` column from `students`
-- Run a `JOIN` between `students` and `rooms` to confirm the relationship works end to end
+**What it does:**
+- Creates `rooms` (`room_id`, `room_number`, `capacity`) and inserts 8 rooms (101–105, 119, 121, 111)
+- Identifies unique room numbers from `students` via `SELECT DISTINCT`
+- Adds `room_id` to `students`, links each student to the correct room via `UPDATE`
+- Adds `FOREIGN KEY (room_id) REFERENCES rooms(room_id)`
+- Drops the now-redundant `Room_number` column
+- Verifies with a `JOIN` between `students` and `rooms`
 
 ---
 
-## 🧱 Database Design Overview
+### ✅ Chapter 11 — Fees & Payments (`ch11_fees_payments/ch11_fees_payments.sql`)
 
-### Entity: `students` (current state, mid-refactor)
+Replaced the single `Fee_status` column with two real tables.
 
-| Column | Data Type | Constraints | Description |
-|--------|-----------|-------------|-------------|
-| `student_id` | INT | PRIMARY KEY, AUTO_INCREMENT | Unique identifier for each student |
-| `Name` | VARCHAR(100) | NOT NULL | Full name of the student |
-| `Age` | INT | NOT NULL | Age of the student |
-| `Gender` | ENUM | — | Male / Female / Other |
-| `Room_number` | INT | NOT NULL | *(to be removed once ch10 is finished)* |
-| `room_id` | INT | *(FK pending)* | Links to `rooms.room_id` |
-| `Fee_status` | ENUM | NOT NULL | Whether fee is Paid or Due |
-| `date_of_birth` | DATE | — | Added in Chapter 6 |
-| `email` | VARCHAR(100) | UNIQUE | Added in Chapter 6, constrained in Chapter 7 |
+**What it does:**
+- Creates `fees` (`fee_id`, `student_id` FK, `amount_due`, `due_date`, `status`) and `payments` (`payment_id`, `fee_id` FK, `amount`, `payment_date`, `payment_method`)
+- Inserts one fee row per student (₹8000 each) and matching payment rows for the 8 "Paid" students
+- Verifies with a `JOIN` + `LEFT JOIN` across `students` → `fees` → `payments`
+- Drops the now-redundant `Fee_status` column
+- Practice queries: total amount due, total collected, students who still owe money
 
-### Entity: `rooms` (new in Chapter 10)
+---
 
-| Column | Data Type | Constraints | Description |
-|--------|-----------|-------------|-------------|
-| `room_id` | INT | PRIMARY KEY, AUTO_INCREMENT | Unique identifier for each room |
-| `room_number` | INT | — | The physical room number |
-| `capacity` | INT | — | How many students the room can hold |
+### ✅ Chapter 12 — Complaints (`ch12_complaints/ch12_complaints.sql`)
+
+Added an operational table with no migration needed.
+
+**What it does:**
+- Creates `complaints` (`complaint_id`, `student_id` FK, `room_id` FK, `description`, `status`, `created_at`, `resolved_at`)
+- Inserts 8 sample complaints (mix of Open/Resolved) and sets `resolved_at` for resolved ones
+- 3-table `JOIN`: complaints → students → rooms
+- Practice queries: rooms with multiple complaints (`GROUP BY` + `HAVING`), average resolution time (`TIMESTAMPDIFF`), open complaints with student contact info
+
+---
+
+### ✅ Chapter 13 — Self Join (`ch13_self_join/ch13_self_join.sql`)
+
+Modeled student referrals within the same table.
+
+**What it does:**
+- Adds `referred_by_id` to `students` with a self-referencing `FOREIGN KEY`
+- Populates a few referral relationships (e.g. Aarav referred Priya and Rohit)
+- `LEFT JOIN` of `students` to itself to show each student alongside their referrer's name (LEFT JOIN keeps non-referred students visible)
+- Practice queries: referral count per referrer, students never referred by anyone
+
+---
+
+### ✅ Chapter 14 — Joins (`ch14_joins/ch14_joins.sql`)
+
+Brought together every table built so far into combined multi-table queries.
+
+**What it does:**
+- 2-table joins: students+rooms, students+fees
+- `INNER JOIN` across 3 tables (students, rooms, fees)
+- `LEFT JOIN` to find students with **no** complaints
+- A combined "dashboard" query: per-student room, fee status, and count of open complaints
+- Practice queries: students with Due fees **and** an open complaint, room-wise student/complaint counts
+
+---
+
+## 🧱 Database Design Overview (current state, after Ch14)
+
+### `students`
+
+| Column | Data Type | Constraints |
+|--------|-----------|-------------|
+| `student_id` | INT | PRIMARY KEY, AUTO_INCREMENT |
+| `Name` | VARCHAR(100) | NOT NULL |
+| `Age` | INT | NOT NULL |
+| `Gender` | ENUM | — |
+| `room_id` | INT | FK → `rooms.room_id` |
+| `date_of_birth` | DATE | — |
+| `email` | VARCHAR(100) | UNIQUE |
+| `referred_by_id` | INT | FK → `students.student_id` (self-referencing) |
+
+### `rooms`
+`room_id` (PK), `room_number`, `capacity`
+
+### `fees`
+`fee_id` (PK), `student_id` (FK), `amount_due`, `due_date`, `status`
+
+### `payments`
+`payment_id` (PK), `fee_id` (FK), `amount`, `payment_date`, `payment_method`
+
+### `complaints`
+`complaint_id` (PK), `student_id` (FK), `room_id` (FK), `description`, `status`, `created_at`, `resolved_at`
 
 ---
 
 ## 🚀 How to Run
 
-1. Make sure you have **MySQL** (or any compatible SQL client like MySQL Workbench, DBeaver, or phpMyAdmin) installed.
-2. Open each `.sql` file in your SQL client.
-3. Run the chapters **in order** — each one builds on data created by the previous one.
+Run the chapters **in order** — each one builds on data/structure created by the previous one.
 
 ```bash
 mysql -u harry -p < ch1_schema/CH1_Shema.sql
@@ -238,6 +250,10 @@ mysql -u harry -p < ch7_constraints/ch7_constraints.sql
 mysql -u harry -p < ch8_functions/ch8_functions.sql
 mysql -u harry -p < ch9_transactions/ch9_transactions.sql
 mysql -u harry -p < ch10_rooms_relation/ch10_room_relation.sql
+mysql -u harry -p < ch11_fees_payments/ch11_fees_payments.sql
+mysql -u harry -p < ch12_complaints/ch12_complaints.sql
+mysql -u harry -p < ch13_self_join/ch13_self_join.sql
+mysql -u harry -p < ch14_joins/ch14_joins.sql
 ```
 
 Or paste the contents directly into your SQL editor and execute top to bottom.
@@ -257,37 +273,30 @@ Or paste the contents directly into your SQL editor and execute top to bottom.
 - [x] Add constraints after table creation: `UNIQUE`, `CHECK`, `NOT NULL`
 - [x] Aggregate functions: `COUNT`, `MIN`, `MAX`, `AVG`
 - [x] Transactions: `autocommit`, `COMMIT`, `ROLLBACK`
+- [x] Foreign keys and relational tables (`rooms`, `fees`, `payments`, `complaints`)
+- [x] `JOIN` (INNER / LEFT) across multiple tables
+- [x] Self JOIN (student referrals)
+- [ ] **Views** — *next up*
 - [ ] String, date, and math functions; `IF()`
-- [ ] Finish foreign key relationship for `rooms` (FK constraint + JOIN)
-- [ ] `fees` and `payments` tables
-- [ ] `JOIN` (INNER / LEFT / RIGHT) across multiple tables
-- [ ] Self JOIN (student referrals)
 - [ ] `UNION` / `UNION ALL`
-- [ ] Create `VIEWS` for common reports
 - [ ] Indexing for performance
 - [ ] Subqueries
-- [ ] `GROUP BY`, `HAVING`, `WITH ROLLUP`
+- [ ] `GROUP BY`, `HAVING`, `WITH ROLLUP` (beyond the basic versions used in Ch12)
 - [ ] Write `STORED PROCEDURES` and `TRIGGERS`
-- [ ] `wardens` and `complaints` tables
+- [ ] `wardens` table
 
 ---
 
 ## 🔭 Planned Additions
 
-Following my SQL course chapter by chapter:
-
-- `ch10_rooms_relation/` — *(finish)* add FK constraint, drop `Room_number`, verify with JOIN
-- `ch11_fees_payments/` — New `fees` and `payments` tables, replacing the `Fee_status` column
-- `ch12_complaints/` — New `complaints` table linked to `students` and `rooms`
-- `ch13_self_join/` — `referred_by_id` column + self join for referrer names
-- `ch14_joins/` — INNER, LEFT, RIGHT JOIN across `students`, `rooms`, `fees`, `complaints`
-- `ch15_union/` — `alumni_students` table combined with `students` via `UNION`/`UNION ALL`
-- `ch16_views/` — Views such as `student_outstanding_dues`, `current_room_occupancy`
-- `ch17_indexes/` — Single and multi-column indexes
-- `ch18_subqueries/` — Scalar subqueries, subqueries with `IN`
-- `ch19_group_by_having/` — `GROUP BY`, `HAVING`, `WITH ROLLUP`
-- `ch20_stored_procedures/` — `AddStudent()`, `AllocateRoom()` procedures with `IN` parameters
-- `ch21_triggers/` — Auto-logging and auto-updating triggers (e.g. on payment insert)
+- `ch15_views/` — *(next)* Views for outstanding dues, room occupancy, and open complaints reports
+- `ch16_indexes/` — Single and multi-column indexes
+- `ch17_subqueries/` — Scalar subqueries, subqueries with `IN`
+- `ch18_group_by_having/` — `GROUP BY`, `HAVING`, `WITH ROLLUP`
+- `ch19_stored_procedures/` — `AddStudent()`, `AllocateRoom()` procedures with `IN` parameters
+- `ch20_triggers/` — Auto-logging and auto-updating triggers (e.g. on payment insert)
+- `ch21_union/` — `alumni_students` table combined with `students` via `UNION`/`UNION ALL`
+- `wardens` table + linking to `rooms`
 
 ---
 
