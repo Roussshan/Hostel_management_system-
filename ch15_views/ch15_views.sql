@@ -49,3 +49,14 @@ GROUP BY r.room_number, r.capacity;
 
 -- Ouery it 
 SELECT * FROM current_room_occupancy;
+
+-- Third view: open complaints report
+SELECT 
+    s.Name,
+    r.room_number,
+    c.description,
+    c.created_at
+FROM complaints c
+JOIN students s ON c.student_id = s.student_id
+JOIN rooms r ON c.room_id = r.room_id
+WHERE c.status = 'Open';
