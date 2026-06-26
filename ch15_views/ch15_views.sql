@@ -60,3 +60,18 @@ FROM complaints c
 JOIN students s ON c.student_id = s.student_id
 JOIN rooms r ON c.room_id = r.room_id
 WHERE c.status = 'Open';
+
+-- Then save it as a view 
+CREATE VIEW open_complaints_report AS
+SELECT 
+    s.Name,
+    r.room_number,
+    c.description,
+    c.created_at
+FROM complaints c
+JOIN students s ON c.student_id = s.student_id
+JOIN rooms r ON c.room_id = r.room_id
+WHERE c.status = 'Open';
+
+-- Ouery it 
+SELECT * FROM open_complaints_report;
