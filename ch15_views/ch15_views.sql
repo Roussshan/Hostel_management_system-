@@ -27,4 +27,25 @@ JOIN fees f ON s.student_id = f.student_id
 LEFT JOIN payments p ON f.fee_id = p.fee_id
 GROUP BY s.student_id, s.Name, f.amount_due;
 
-SELECT * FROM student_outstanding_dues;
+
+-- Second view: Room occupancy
+SELECT 
+    r.room_number,
+    r.capacity,
+    COUNT(s.student_id) AS current_occupants
+FROM rooms r
+LEFT JOIN students s ON r.room_id = s.room_id
+GROUP BY r.room_number, r.capacity;
+
+-- Then save it as a view 
+CREATE VIEW current_room_occupancy AS
+SELECT 
+    r.room_number,
+    r.capacity,
+    COUNT(s.student_id) AS current_occupants
+FROM rooms r
+LEFT JOIN students s ON r.room_id = s.room_id
+GROUP BY r.room_number, r.capacity;
+
+-- Ouery it 
+SELECT * FROM current_room_occupancy;
