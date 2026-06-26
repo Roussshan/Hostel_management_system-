@@ -78,3 +78,16 @@ SELECT * FROM open_complaints_report;
 
 -- Prove views are "live"
 SELECT * FROM student_outstanding_dues WHERE balance > 0;
+
+-- paying off that fee, completely separately from the view
+-- Find their fee_id
+SELECT fee_id, student_id FROM fees WHERE student_id = 2;
+
+-- Insert the payment
+INSERT INTO payments (fee_id, amount, payment_date, payment_method)
+VALUES (2, 8000, '2026-06-26', 'UPI');
+
+-- Update their fee status
+UPDATE fees SET status = 'Paid' WHERE student_id = 2;
+
+SELECT * FROM student_outstanding_dues WHERE student_id = 2; -- re-run the query
