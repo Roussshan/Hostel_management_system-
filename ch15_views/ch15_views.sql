@@ -75,3 +75,6 @@ WHERE c.status = 'Open';
 
 -- Ouery it 
 SELECT * FROM open_complaints_report;
+
+-- Prove views are "live"
+SELECT * FROM student_outstanding_dues WHERE balance > 0;
