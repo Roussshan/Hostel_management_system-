@@ -11,3 +11,8 @@ SHOW INDEXES FROM complaints;
 CREATE INDEX idx_name ON students(Name);
 SHOW INDEXES FROM students; -- verify
 
+-- Create a multi-column index
+CREATE INDEX idx_gender_age ON students(Gender, Age);
+
+-- Prove the index is actually used
+EXPLAIN SELECT * FROM students WHERE Gender = 'Female' AND Age > 20;
