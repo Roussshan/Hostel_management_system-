@@ -16,3 +16,8 @@ CREATE INDEX idx_gender_age ON students(Gender, Age);
 
 -- Prove the index is actually used
 EXPLAIN SELECT * FROM students WHERE Gender = 'Female' AND Age > 20;
+
+-- Index your foreign key columns
+CREATE INDEX idx_fees_student ON fees(student_id);
+CREATE INDEX idx_complaints_room ON complaints(room_id);
+CREATE INDEX idx_complaints_student ON complaints(student_id);
