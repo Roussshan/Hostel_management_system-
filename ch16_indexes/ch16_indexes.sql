@@ -21,3 +21,7 @@ EXPLAIN SELECT * FROM students WHERE Gender = 'Female' AND Age > 20;
 CREATE INDEX idx_fees_student ON fees(student_id);
 CREATE INDEX idx_complaints_room ON complaints(room_id);
 CREATE INDEX idx_complaints_student ON complaints(student_id);
+
+-- Drop one for practice
+DROP INDEX idx_name ON students;
+SHOW INDEXES FROM students; -- confirm it's gone
