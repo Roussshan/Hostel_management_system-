@@ -16,3 +16,10 @@ FROM students
 WHERE student_id IN (
     SELECT student_id FROM complaints WHERE status = 'Open'
 );
+
+-- Subquery with NOT IN: students who have never complained
+SELECT Name
+FROM students
+WHERE student_id NOT IN (
+    SELECT student_id FROM complaints
+);
