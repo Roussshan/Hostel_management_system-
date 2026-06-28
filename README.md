@@ -30,6 +30,8 @@ Every file here represents a concept I've learned, applied, and tested myself.
 | `ch12_complaints/ch12_complaints.sql` | Chapter 12 | New `complaints` table linked to students and rooms |
 | `ch13_self_join/ch13_self_join.sql` | Chapter 13 | `referred_by_id` column + self join for referrer names |
 | `ch14_joins/ch14_joins.sql` | Chapter 14 | INNER/LEFT JOIN across students, rooms, fees, complaints |
+| `ch15_views/ch15_views.sql` | Chapter 15 | Views for dues, room occupancy, and open complaints |
+| `ch16_indexes/ch16_indexes.sql` | Chapter 16 | Single, multi-column, and foreign-key indexes |
 
 ---
 
@@ -206,14 +208,41 @@ Brought together every table built so far into combined multi-table queries.
 
 ---
 
-## 🧱 Database Design Overview (current state, after Ch14)
+### ✅ Chapter 15 — Views (`ch15_views/ch15_views.sql`)
+
+Built 3 reusable saved queries ("reports") on top of the relational schema, and proved that views always reflect live data.
+
+**What it does:**
+- `student_outstanding_dues` — joins students → fees → payments and computes each student's outstanding balance
+- `current_room_occupancy` — joins rooms → students and counts current occupants per room
+- `open_complaints_report` — joins complaints → students → rooms, filtered to `status = 'Open'`
+- **Live-data proof:** queried `student_outstanding_dues` for student #2 (Due), then inserted a payment and updated their fee to 'Paid' — re-querying the *same, untouched* view immediately showed balance = 0, confirming views aren't stored copies
+- Listed views with `SHOW FULL TABLES ... WHERE TABLE_TYPE LIKE 'VIEW'`, then dropped and recreated `open_complaints_report` for practice
+
+---
+
+### ✅ Chapter 16 — Indexes (`ch16_indexes/ch16_indexes.sql`)
+
+Practiced speeding up lookups and verifying that indexes are actually used by the query planner.
+
+**What it does:**
+- `SHOW INDEXES` on `students`, `rooms`, `fees`, `complaints` to see existing auto-created indexes (PK, UNIQUE on email)
+- `CREATE INDEX idx_name ON students(Name)` — single-column index
+- `CREATE INDEX idx_gender_age ON students(Gender, Age)` — multi-column index
+- `EXPLAIN SELECT ... WHERE Gender = 'Female' AND Age > 20` to confirm `idx_gender_age` is picked up by the query plan
+- Indexed the foreign key columns used in joins: `fees.student_id`, `complaints.room_id`, `complaints.student_id`
+- Dropped `idx_name` for practice and confirmed removal
+
+---
+
+## 🧱 Database Design Overview (current state, after Ch16)
 
 ### `students`
 
 | Column | Data Type | Constraints |
 |--------|-----------|-------------|
 | `student_id` | INT | PRIMARY KEY, AUTO_INCREMENT |
-| `Name` | VARCHAR(100) | NOT NULL |
+| `Name` | VARCHAR(100) | NOT NULL, indexed (briefly, dropped in Ch16) |
 | `Age` | INT | NOT NULL |
 | `Gender` | ENUM | — |
 | `room_id` | INT | FK → `rooms.room_id` |
@@ -221,17 +250,22 @@ Brought together every table built so far into combined multi-table queries.
 | `email` | VARCHAR(100) | UNIQUE |
 | `referred_by_id` | INT | FK → `students.student_id` (self-referencing) |
 
+Indexes: `idx_gender_age (Gender, Age)`
+
 ### `rooms`
 `room_id` (PK), `room_number`, `capacity`
 
 ### `fees`
-`fee_id` (PK), `student_id` (FK), `amount_due`, `due_date`, `status`
+`fee_id` (PK), `student_id` (FK, indexed), `amount_due`, `due_date`, `status`
 
 ### `payments`
 `payment_id` (PK), `fee_id` (FK), `amount`, `payment_date`, `payment_method`
 
 ### `complaints`
-`complaint_id` (PK), `student_id` (FK), `room_id` (FK), `description`, `status`, `created_at`, `resolved_at`
+`complaint_id` (PK), `student_id` (FK, indexed), `room_id` (FK, indexed), `description`, `status`, `created_at`, `resolved_at`
+
+### Views
+`student_outstanding_dues`, `current_room_occupancy`, `open_complaints_report`
 
 ---
 
@@ -254,6 +288,8 @@ mysql -u harry -p < ch11_fees_payments/ch11_fees_payments.sql
 mysql -u harry -p < ch12_complaints/ch12_complaints.sql
 mysql -u harry -p < ch13_self_join/ch13_self_join.sql
 mysql -u harry -p < ch14_joins/ch14_joins.sql
+mysql -u harry -p < ch15_views/ch15_views.sql
+mysql -u harry -p < ch16_indexes/ch16_indexes.sql
 ```
 
 Or paste the contents directly into your SQL editor and execute top to bottom.
@@ -276,11 +312,11 @@ Or paste the contents directly into your SQL editor and execute top to bottom.
 - [x] Foreign keys and relational tables (`rooms`, `fees`, `payments`, `complaints`)
 - [x] `JOIN` (INNER / LEFT) across multiple tables
 - [x] Self JOIN (student referrals)
-- [ ] **Views** — *next up*
+- [x] Create `VIEWS` for common reports, and prove they reflect live data
+- [x] Indexing — single-column, multi-column, and foreign-key indexes; verifying usage with `EXPLAIN`
+- [ ] **Subqueries** — *next up*
 - [ ] String, date, and math functions; `IF()`
 - [ ] `UNION` / `UNION ALL`
-- [ ] Indexing for performance
-- [ ] Subqueries
 - [ ] `GROUP BY`, `HAVING`, `WITH ROLLUP` (beyond the basic versions used in Ch12)
 - [ ] Write `STORED PROCEDURES` and `TRIGGERS`
 - [ ] `wardens` table
@@ -289,9 +325,7 @@ Or paste the contents directly into your SQL editor and execute top to bottom.
 
 ## 🔭 Planned Additions
 
-- `ch15_views/` — *(next)* Views for outstanding dues, room occupancy, and open complaints reports
-- `ch16_indexes/` — Single and multi-column indexes
-- `ch17_subqueries/` — Scalar subqueries, subqueries with `IN`
+- `ch17_subqueries/` — *(next)* Scalar subqueries, `IN`/`NOT IN`, subquery in `SELECT`, subquery in `FROM` (derived tables)
 - `ch18_group_by_having/` — `GROUP BY`, `HAVING`, `WITH ROLLUP`
 - `ch19_stored_procedures/` — `AddStudent()`, `AllocateRoom()` procedures with `IN` parameters
 - `ch20_triggers/` — Auto-logging and auto-updating triggers (e.g. on payment insert)
