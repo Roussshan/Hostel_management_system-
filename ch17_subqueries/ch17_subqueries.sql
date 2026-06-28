@@ -23,3 +23,11 @@ FROM students
 WHERE student_id NOT IN (
     SELECT student_id FROM complaints
 );
+
+-- Subquery in WHERE comparing against fees
+SELECT s.Name, f.amount_due
+FROM students s
+JOIN fees f ON s.student_id = f.student_id
+WHERE f.amount_due > (
+    SELECT AVG(amount_due) FROM fees
+);
