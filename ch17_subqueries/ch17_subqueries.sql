@@ -39,3 +39,12 @@ SELECT
     (SELECT COUNT(*) FROM students WHERE room_id = s.room_id) AS roommates_count
 FROM students s
 JOIN rooms r ON s.room_id = r.room_id;
+
+-- Subquery in FROM (derived table)
+SELECT room_id, total_students
+FROM (
+    SELECT room_id, COUNT(*) AS total_students
+    FROM students
+    GROUP BY room_id
+) AS room_counts
+WHERE total_students > 1;
