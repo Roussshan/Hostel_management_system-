@@ -48,3 +48,13 @@ FROM (
     GROUP BY room_id
 ) AS room_counts
 WHERE total_students > 1;
+
+-- Subquery with referrals (using ch13's data)
+SELECT Name, referred_by_id
+FROM students
+WHERE referred_by_id IN (
+    SELECT s.student_id
+    FROM students s
+    JOIN fees f ON s.student_id = f.student_id
+    WHERE f.status = 'Paid'
+);
