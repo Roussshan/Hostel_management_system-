@@ -31,3 +31,11 @@ JOIN fees f ON s.student_id = f.student_id
 WHERE f.amount_due > (
     SELECT AVG(amount_due) FROM fees
 );
+
+-- Scalar subquery inside SELECT
+SELECT 
+    s.Name,
+    r.room_number,
+    (SELECT COUNT(*) FROM students WHERE room_id = s.room_id) AS roommates_count
+FROM students s
+JOIN rooms r ON s.room_id = r.room_id;
