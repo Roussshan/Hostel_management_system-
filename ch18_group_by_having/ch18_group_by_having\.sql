@@ -34,3 +34,8 @@ FROM students
 WHERE referred_by_id IS NOT NULL
 GROUP BY referred_by_id
 HAVING COUNT(*) > 1;
+
+-- WITH ROLLUP: grand totals
+SELECT Gender, COUNT(*) AS total_students
+FROM students
+GROUP BY Gender WITH ROLLUP;
