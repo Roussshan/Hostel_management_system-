@@ -9,3 +9,8 @@ GROUP BY Gender;
 SELECT Gender, AVG(Age) AS avg_age
 FROM students
 GROUP BY Gender;
+
+-- GROUP BY on fees: total due vs total collected per status
+SELECT status, SUM(amount_due) AS total_due, COUNT(*) AS fee_count
+FROM fees
+GROUP BY status;
