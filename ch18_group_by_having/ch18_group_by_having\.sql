@@ -39,3 +39,11 @@ HAVING COUNT(*) > 1;
 SELECT Gender, COUNT(*) AS total_students
 FROM students
 GROUP BY Gender WITH ROLLUP;
+
+-- Combine GROUP BY + HAVING + ORDER BY
+SELECT s.referred_by_id, b.Name AS referrer_name, COUNT(*) AS total_referred
+FROM students s
+JOIN students b ON s.referred_by_id = b.student_id
+GROUP BY s.referred_by_id, b.Name
+HAVING COUNT(*) >= 1
+ORDER BY total_referred DESC;
