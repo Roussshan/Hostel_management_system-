@@ -20,3 +20,10 @@ SELECT r.room_number, COUNT(c.complaint_id) AS total_complaints
 FROM rooms r
 LEFT JOIN complaints c ON r.room_id = c.room_id
 GROUP BY r.room_number;
+
+-- HAVING: filter groups, not rows
+SELECT r.room_number, COUNT(c.complaint_id) AS total_complaints
+FROM rooms r
+LEFT JOIN complaints c ON r.room_id = c.room_id
+GROUP BY r.room_number
+HAVING COUNT(c.complaint_id) > 1;
