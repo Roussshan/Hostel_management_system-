@@ -27,3 +27,10 @@ FROM rooms r
 LEFT JOIN complaints c ON r.room_id = c.room_id
 GROUP BY r.room_number
 HAVING COUNT(c.complaint_id) > 1;
+
+-- HAVING with AVG: referrers who referred more than 1 student
+SELECT referred_by_id, COUNT(*) AS total_referred
+FROM students
+WHERE referred_by_id IS NOT NULL
+GROUP BY referred_by_id
+HAVING COUNT(*) > 1;
