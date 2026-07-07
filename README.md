@@ -32,6 +32,8 @@ Every file here represents a concept I've learned, applied, and tested myself.
 | `ch14_joins/ch14_joins.sql` | Chapter 14 | INNER/LEFT JOIN across students, rooms, fees, complaints |
 | `ch15_views/ch15_views.sql` | Chapter 15 | Views for dues, room occupancy, and open complaints |
 | `ch16_indexes/ch16_indexes.sql` | Chapter 16 | Single, multi-column, and foreign-key indexes |
+| `ch17_subqueries/ch17_subqueries.sql` | Chapter 17 | Scalar subqueries, `IN`/`NOT IN`, subquery in `SELECT`, subquery in `FROM` (derived tables) |
+| `ch18_group_by_having/ch18_group_by_having.sql` | Chapter 18 | `GROUP BY`, `HAVING`, `WITH ROLLUP` |
 
 ---
 
@@ -100,160 +102,99 @@ Inserted 10 student records using a single multi-row `INSERT` with explicit colu
 
 ### ✅ Chapter 6 — Altering Tables (`ch6_altering_tables/ch6_altering_table.sql`)
 
-Extended `students` with `date_of_birth` and `email`, backfilled data for all students — 3 new students (11, 12, 13) were also added, bringing the table to 13 students total.
-
-**Student data after Chapters 1–9 (before the room/fee split in Ch10–11):**
-
-| student_id | Name | Age | Gender | Fee_status | email |
-|---|---|---|---|---|---|
-| 1 | Aarav Sharma | 23 | Male | Paid | aarav@gmail.com |
-| 2 | Priya Mehta | 20 | Female | Due | priya@gmail.com |
-| 3 | Rohit Verma | 21 | Male | Paid | rohit@gmail.com |
-| 4 | Sneha Iyer | 18 | Female | Paid | sneha@gmail.com |
-| 5 | Karan Patel | 22 | Male | Due | karan@gmial.com |
-| 6 | Anjali Singh | 19 | Female | Paid | anjali@gmail.com |
-| 7 | Vikram Nair | 20 | Male | Due | vikram@gmail.com |
-| 8 | Pooja Reddy | 21 | Female | Paid | pooja@gmail.com |
-| 9 | Arjun Gupta | 18 | Male | Paid | arun@gmail.com |
-| 10 | Ritika Joshi | 22 | Female | Due | ritika@gmail.com |
-| 11 | kunal Kumar | 21 | Male | Paid | kunal@gmail.com |
-| 12 | sneha Bansal | 23 | Female | Paid | snneha@gmail.com |
-| 13 | pooja singh | 20 | Female | Due | poo@gmail.com |
-
-> ⚠️ Students 11–13 don't have a matching `INSERT` saved in any committed file — worth adding one near the top of `ch6_altering_table.sql` for full reproducibility.
-
-**Concepts practised:** `ALTER TABLE ... ADD COLUMN`, backfilling with `UPDATE`.
+**Concepts practised:** `ALTER TABLE ... ADD COLUMN` (`date_of_birth`, `email`), backfilling existing and newly inserted rows with real values.
 
 ---
 
 ### ✅ Chapter 7 — Constraints (`ch7_constraints/ch7_constraints.sql`)
 
-**Concepts practised:** `ADD CONSTRAINT ... UNIQUE` on `email` (verified duplicate rejection), `ADD CONSTRAINT ... CHECK (age > 16)`, `MODIFY COLUMN ... NOT NULL` on `Age`.
+**Concepts practised:** Adding `UNIQUE` (on `email`), `CHECK` (age range), and `NOT NULL` constraints to an already-populated table via `ALTER TABLE`.
 
 ---
 
 ### ✅ Chapter 8 — Functions (`ch8_functions/ch8_functions.sql`)
 
-**Concepts practised:** `COUNT(*)`, `MIN()`/`MAX()`, `AVG()` on student age and gender.
+**Concepts practised:** Aggregate functions — `COUNT`, `MIN`, `MAX`, `AVG` — applied to student data.
 
 ---
 
 ### ✅ Chapter 9 — Transactions (`ch9_transactions/ch9_transactions.sql`)
 
-**Concepts practised:** checking default `autocommit`, `SET autocommit = 0`, `COMMIT`, `ROLLBACK`, re-enabling `autocommit = 1`.
+**Concepts practised:** `autocommit`, explicit `START TRANSACTION`, `COMMIT`, and `ROLLBACK` to test undoing changes safely.
 
 ---
 
 ### ✅ Chapter 10 — Rooms Relation (`ch10_rooms_relation/ch10_room_relation.sql`)
 
-Split room data out of `students` into its own `rooms` table — the first real normalization step.
+Introduced a proper `rooms` table and linked it to `students` via a foreign key, replacing the old `Room_number` column.
 
-**What it does:**
-- Creates `rooms` (`room_id`, `room_number`, `capacity`) and inserts 8 rooms (101–105, 119, 121, 111)
-- Identifies unique room numbers from `students` via `SELECT DISTINCT`
-- Adds `room_id` to `students`, links each student to the correct room via `UPDATE`
-- Adds `FOREIGN KEY (room_id) REFERENCES rooms(room_id)`
-- Drops the now-redundant `Room_number` column
-- Verifies with a `JOIN` between `students` and `rooms`
+**Concepts practised:** `CREATE TABLE` with `FOREIGN KEY`, `ALTER TABLE ... DROP COLUMN`, populating a lookup/relation table.
 
 ---
 
 ### ✅ Chapter 11 — Fees & Payments (`ch11_fees_payments/ch11_fees_payments.sql`)
 
-Replaced the single `Fee_status` column with two real tables.
+Split billing out of `students` into dedicated `fees` and `payments` tables, dropping the old `Fee_status` column.
 
-**What it does:**
-- Creates `fees` (`fee_id`, `student_id` FK, `amount_due`, `due_date`, `status`) and `payments` (`payment_id`, `fee_id` FK, `amount`, `payment_date`, `payment_method`)
-- Inserts one fee row per student (₹8000 each) and matching payment rows for the 8 "Paid" students
-- Verifies with a `JOIN` + `LEFT JOIN` across `students` → `fees` → `payments`
-- Drops the now-redundant `Fee_status` column
-- Practice queries: total amount due, total collected, students who still owe money
+**Concepts practised:** One-to-many relational design, `FOREIGN KEY` references, `ENUM` status columns, multi-table `INSERT`.
 
 ---
 
 ### ✅ Chapter 12 — Complaints (`ch12_complaints/ch12_complaints.sql`)
 
-Added an operational table with no migration needed.
+Added a `complaints` table referencing both `students` and `rooms`.
 
-**What it does:**
-- Creates `complaints` (`complaint_id`, `student_id` FK, `room_id` FK, `description`, `status`, `created_at`, `resolved_at`)
-- Inserts 8 sample complaints (mix of Open/Resolved) and sets `resolved_at` for resolved ones
-- 3-table `JOIN`: complaints → students → rooms
-- Practice queries: rooms with multiple complaints (`GROUP BY` + `HAVING`), average resolution time (`TIMESTAMPDIFF`), open complaints with student contact info
+**Concepts practised:** Multiple foreign keys in one table, `status`/`created_at`/`resolved_at` tracking columns, basic `GROUP BY` used for a quick complaints-per-room check.
 
 ---
 
 ### ✅ Chapter 13 — Self Join (`ch13_self_join/ch13_self_join.sql`)
 
-Modeled student referrals within the same table.
+Added a `referred_by_id` column on `students` (a self-referencing foreign key) and used a self join to pull each student's referrer's name.
 
-**What it does:**
-- Adds `referred_by_id` to `students` with a self-referencing `FOREIGN KEY`
-- Populates a few referral relationships (e.g. Aarav referred Priya and Rohit)
-- `LEFT JOIN` of `students` to itself to show each student alongside their referrer's name (LEFT JOIN keeps non-referred students visible)
-- Practice queries: referral count per referrer, students never referred by anyone
+**Concepts practised:** Self-referencing `FOREIGN KEY`, `SELF JOIN` with table aliases.
 
 ---
 
 ### ✅ Chapter 14 — Joins (`ch14_joins/ch14_joins.sql`)
 
-Brought together every table built so far into combined multi-table queries.
-
-**What it does:**
-- 2-table joins: students+rooms, students+fees
-- `INNER JOIN` across 3 tables (students, rooms, fees)
-- `LEFT JOIN` to find students with **no** complaints
-- A combined "dashboard" query: per-student room, fee status, and count of open complaints
-- Practice queries: students with Due fees **and** an open complaint, room-wise student/complaint counts
+**Concepts practised:** `INNER JOIN` and `LEFT JOIN` across `students`, `rooms`, `fees`, and `complaints` to answer real multi-table questions (e.g. who owes fees and what room they're in).
 
 ---
 
 ### ✅ Chapter 15 — Views (`ch15_views/ch15_views.sql`)
 
-Built 3 reusable saved queries ("reports") on top of the relational schema, and proved that views always reflect live data.
+Created reusable views for common reports.
 
-**What it does:**
-- `student_outstanding_dues` — joins students → fees → payments and computes each student's outstanding balance
-- `current_room_occupancy` — joins rooms → students and counts current occupants per room
-- `open_complaints_report` — joins complaints → students → rooms, filtered to `status = 'Open'`
-- **Live-data proof:** queried `student_outstanding_dues` for student #2 (Due), then inserted a payment and updated their fee to 'Paid' — re-querying the *same, untouched* view immediately showed balance = 0, confirming views aren't stored copies
-- Listed views with `SHOW FULL TABLES ... WHERE TABLE_TYPE LIKE 'VIEW'`, then dropped and recreated `open_complaints_report` for practice
+**Concepts practised:** `CREATE VIEW`, querying a view like a table, confirming views stay in sync with live underlying data.
 
 ---
 
 ### ✅ Chapter 16 — Indexes (`ch16_indexes/ch16_indexes.sql`)
 
-Practiced speeding up lookups and verifying that indexes are actually used by the query planner.
-
-**What it does:**
-- `SHOW INDEXES` on `students`, `rooms`, `fees`, `complaints` to see existing auto-created indexes (PK, UNIQUE on email)
-- `CREATE INDEX idx_name ON students(Name)` — single-column index
-- `CREATE INDEX idx_gender_age ON students(Gender, Age)` — multi-column index
-- `EXPLAIN SELECT ... WHERE Gender = 'Female' AND Age > 20` to confirm `idx_gender_age` is picked up by the query plan
-- Indexed the foreign key columns used in joins: `fees.student_id`, `complaints.room_id`, `complaints.student_id`
-- Dropped `idx_name` for practice and confirmed removal
+**Concepts practised:** Single-column and multi-column `INDEX`es, indexes on foreign-key columns, verifying index usage with `EXPLAIN`.
 
 ---
 
-## 🧱 Database Design Overview (current state, after Ch16)
+### ✅ Chapter 17 — Subqueries (`ch17_subqueries/ch17_subqueries.sql`)
+
+**Concepts practised:** Scalar subqueries in `WHERE` (e.g. students older than the average age), `IN`/`NOT IN` subqueries (students with/without open complaints), subqueries comparing against aggregates (fees above average), a correlated scalar subquery inside `SELECT` (roommate count per student), and subqueries in `FROM` as derived tables (rooms with more than one occupant).
+
+---
+
+### ✅ Chapter 18 — Group By & Having (`ch18_group_by_having/ch18_group_by_having.sql`)
+
+**Concepts practised:** `GROUP BY` on a single column (students per gender), `GROUP BY` combined with `AVG`/`SUM`/`COUNT`, `GROUP BY` across a `JOIN` (complaints per room), `HAVING` to filter aggregated groups (rooms with more than one complaint, referrers who referred more than one student), `WITH ROLLUP` for grand totals, and combining `GROUP BY` + `HAVING` + `ORDER BY` in one query.
+
+---
+
+## 🧩 Current Schema Snapshot
 
 ### `students`
-
-| Column | Data Type | Constraints |
-|--------|-----------|-------------|
-| `student_id` | INT | PRIMARY KEY, AUTO_INCREMENT |
-| `Name` | VARCHAR(100) | NOT NULL, indexed (briefly, dropped in Ch16) |
-| `Age` | INT | NOT NULL |
-| `Gender` | ENUM | — |
-| `room_id` | INT | FK → `rooms.room_id` |
-| `date_of_birth` | DATE | — |
-| `email` | VARCHAR(100) | UNIQUE |
-| `referred_by_id` | INT | FK → `students.student_id` (self-referencing) |
-
-Indexes: `idx_gender_age (Gender, Age)`
+`student_id` (PK), `Name`, `Age`, `Gender`, `date_of_birth`, `email` (UNIQUE), `referred_by_id` (self FK), `room_id` (FK, indexed)
 
 ### `rooms`
-`room_id` (PK), `room_number`, `capacity`
+`room_id` (PK), `room_number`, capacity/occupancy-related columns
 
 ### `fees`
 `fee_id` (PK), `student_id` (FK, indexed), `amount_due`, `due_date`, `status`
@@ -290,6 +231,8 @@ mysql -u harry -p < ch13_self_join/ch13_self_join.sql
 mysql -u harry -p < ch14_joins/ch14_joins.sql
 mysql -u harry -p < ch15_views/ch15_views.sql
 mysql -u harry -p < ch16_indexes/ch16_indexes.sql
+mysql -u harry -p < ch17_subqueries/ch17_subqueries.sql
+mysql -u harry -p < ch18_group_by_having/ch18_group_by_having.sql
 ```
 
 Or paste the contents directly into your SQL editor and execute top to bottom.
@@ -314,10 +257,10 @@ Or paste the contents directly into your SQL editor and execute top to bottom.
 - [x] Self JOIN (student referrals)
 - [x] Create `VIEWS` for common reports, and prove they reflect live data
 - [x] Indexing — single-column, multi-column, and foreign-key indexes; verifying usage with `EXPLAIN`
-- [ ] **Subqueries** — *next up*
-- [ ] String, date, and math functions; `IF()`
+- [x] Subqueries — scalar, `IN`/`NOT IN`, subquery in `SELECT`, subquery in `FROM` (derived tables)
+- [x] `GROUP BY`, `HAVING`, `WITH ROLLUP`
+- [ ] String, date, and math functions; `IF()` — *next up*
 - [ ] `UNION` / `UNION ALL`
-- [ ] `GROUP BY`, `HAVING`, `WITH ROLLUP` (beyond the basic versions used in Ch12)
 - [ ] Write `STORED PROCEDURES` and `TRIGGERS`
 - [ ] `wardens` table
 
@@ -325,11 +268,10 @@ Or paste the contents directly into your SQL editor and execute top to bottom.
 
 ## 🔭 Planned Additions
 
-- `ch17_subqueries/` — *(next)* Scalar subqueries, `IN`/`NOT IN`, subquery in `SELECT`, subquery in `FROM` (derived tables)
-- `ch18_group_by_having/` — `GROUP BY`, `HAVING`, `WITH ROLLUP`
-- `ch19_stored_procedures/` — `AddStudent()`, `AllocateRoom()` procedures with `IN` parameters
-- `ch20_triggers/` — Auto-logging and auto-updating triggers (e.g. on payment insert)
-- `ch21_union/` — `alumni_students` table combined with `students` via `UNION`/`UNION ALL`
+- `ch19_string_date_math_functions/` — *(next)* String, date, and math functions; `IF()`
+- `ch20_union/` — `alumni_students` table combined with `students` via `UNION`/`UNION ALL`
+- `ch21_stored_procedures/` — `AddStudent()`, `AllocateRoom()` procedures with `IN` parameters
+- `ch22_triggers/` — Auto-logging and auto-updating triggers (e.g. on payment insert)
 - `wardens` table + linking to `rooms`
 
 ---
